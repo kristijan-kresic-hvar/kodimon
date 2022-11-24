@@ -1,0 +1,30 @@
+:root {
+  /* General */
+  font-family: 'Bellota', cursive;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+
+  /* Colors */
+  --blue: #0073BC;
+  --blue-light: #73B9E5;
+  --yellow: #FFCC00;
+  --yellow-light: #FFF7D6;
+  --red: #ff0000;
+  --red-light: #FF7575;
+  --green: #079325;
+  --green-light: #62FF84;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
