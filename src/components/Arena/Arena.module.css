@@ -30,15 +30,20 @@
 
 .arena__footer {
     width: 100%;
-    border: 1px solid blue;
+    min-height: 300px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 3rem;
 }
 
 @media only screen and (max-width: 768px) {
     .arena__logo {
         left: 50%;
         transform: translateX(-50%);
+    }
+
+    .arena__footer {
+        flex-direction: column;
     }
 }
