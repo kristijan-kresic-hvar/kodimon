@@ -16,6 +16,9 @@ const Home = () => {
             <Button
                 animate
                 onClick={handleNewGame}
+                style={{
+                    marginTop: '2rem'
+                }}
             >
                 New Game
             </Button>
