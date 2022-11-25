@@ -6,7 +6,7 @@ import Arena from './components/Arena/Arena'
 
 const App = () => {
   return (
-    <div>
+    <div className={styles.app}>
       {/* <Home /> */}
       <Arena />
     </div>

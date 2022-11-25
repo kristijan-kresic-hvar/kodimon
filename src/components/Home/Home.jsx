@@ -2,6 +2,7 @@ import React from 'react'
 import styles from './Home.module.css'
 
 import Logo from '../Logo/Logo'
+import Button from '../Button/Button'
 
 const Home = () => {
 
@@ -12,13 +13,12 @@ const Home = () => {
     return (
         <div className={styles.home}>
             <Logo />
-            <button
-                className={styles.newGameButton}
-                type="button"
+            <Button
+                animate
                 onClick={handleNewGame}
             >
                 New Game
-            </button>
+            </Button>
         </div>
     )
 }
