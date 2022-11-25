@@ -1,0 +1,11 @@
+.wrapper h3 {
+    padding: 0 0 .5rem .5rem;
+}
+
+.wrapper__inner {
+    width: auto;
+    height: auto;
+    background: var(--yellow-light);
+    border: 5px solid var(--yellow);
+    border-radius: 1rem;
+}

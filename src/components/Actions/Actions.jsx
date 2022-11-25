@@ -12,7 +12,9 @@ const Actions = () => {
                 alt="current attacking pokemon illustration arrow"
                 aria-hidden
             />
-            <Button>
+            <Button
+                style={{ marginTop: '2rem' }}
+            >
                 Attack!
             </Button>
         </div>
