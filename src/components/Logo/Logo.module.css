@@ -14,7 +14,12 @@
     width: 100%;
     height: auto;
     max-width: 761px;
-    min-width: 350px;
+}
+
+.logo__small img:nth-child(2) {
+    width: 100%;
+    max-width: 200px;
+    min-width: 200px;
 }
 
 .logo img:nth-child(1) {
@@ -28,8 +33,19 @@
     transform: rotate(-25deg);
 }
 
+.logo__small img:nth-child(1) {
+    width: 100%;
+    max-width: 50px;
+    position: absolute;
+    top: -1.5rem;
+    left: calc(50% - 25px);
+    transform: translateX(45%);
+    z-index: -1;
+    transform: rotate(-25deg);
+}
+
 @media only screen and (max-width: 550px) {
-    .logo img:nth-child(1) {
+    .logo:not(.logo__small) img:nth-child(1) {
         width: 90px;
         top: -2.5rem;
         left: calc(50% - 45px);

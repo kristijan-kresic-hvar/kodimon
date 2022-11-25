@@ -1,0 +1,44 @@
+.arena {
+    width: 100%;
+
+}
+
+.arena__inner {
+    max-width: 1440px;
+    margin: 15rem auto;
+}
+
+.arena__logo {
+    position: absolute;
+    top: 3rem;
+    right: 3rem;
+}
+
+.arena__header {
+    height: auto;
+    border: 1px solid red;
+    min-height: 500px;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 3rem;
+}
+
+.arena__header__actions {
+    align-self: end;
+}
+
+.arena__footer {
+    width: 100%;
+    border: 1px solid blue;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media only screen and (max-width: 768px) {
+    .arena__logo {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
