@@ -1,6 +1,5 @@
 .arena {
     width: 100%;
-
 }
 
 .arena__inner {
@@ -16,16 +15,18 @@
 
 .arena__header {
     height: auto;
-    border: 1px solid red;
-    min-height: 500px;
+    height: auto;
     display: flex;
     justify-content: space-between;
     align-items: start;
     margin-bottom: 3rem;
+    overflow-x: auto;
+    gap: 1rem;
 }
 
 .arena__header__actions {
     align-self: end;
+    margin-bottom: 2rem;
 }
 
 .arena__footer {
@@ -37,6 +38,14 @@
     gap: 3rem;
 }
 
+.arena__footer div:nth-child(1) {
+    order: 1;
+}
+
+.arena__footer div:nth-child(2) {
+    order: 2;
+}
+
 @media only screen and (max-width: 768px) {
     .arena__logo {
         left: 50%;
@@ -45,5 +54,13 @@
 
     .arena__footer {
         flex-direction: column;
+    }
+
+    .arena__footer div:nth-child(1) {
+        order: 2;
+    }
+
+    .arena__footer div:nth-child(2) {
+        order: 1;
     }
 }

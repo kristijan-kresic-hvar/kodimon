@@ -1,0 +1,42 @@
+.pokemon {
+    min-width: 350px;
+    height: auto;
+    min-height: 300px;
+}
+
+.pokemon__health {
+    width: 80%;
+    height: 15px;
+    margin: 0 auto 2rem auto;
+}
+
+.pokemon__health p {
+    text-align: center;
+    color: var(--green);
+}
+
+.pokemon__health__inner {
+    width: 100%;
+    height: inherit;
+    border: 3px solid var(--green);
+    background: var(--green-light);
+    border-radius: 1rem;
+}
+
+.pokemon__info {
+    margin-bottom: 1rem;
+}
+
+.pokemon__info h3 {
+    text-align: center;
+    text-transform: capitalize;
+    margin-bottom: 1rem;
+}
+
+.pokemon__info img {
+    width: 100%;
+    object-fit: 'contain';
+    max-width: 180px;
+    display: block;
+    margin: 0 auto;
+}
