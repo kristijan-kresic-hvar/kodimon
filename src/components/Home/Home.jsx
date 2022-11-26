@@ -14,7 +14,7 @@ const Home = () => {
         <div className={styles.home}>
             <Logo />
             <Button
-                animate
+                animate="true"
                 onClick={handleNewGame}
                 style={{
                     marginTop: '2rem'

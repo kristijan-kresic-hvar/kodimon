@@ -14,6 +14,7 @@ const Actions = () => {
             />
             <Button
                 style={{ marginTop: '2rem' }}
+                animate="true"
             >
                 Attack!
             </Button>
