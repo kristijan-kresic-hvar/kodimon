@@ -1,21 +1,21 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styles from './Home.module.css'
 
 import Logo from '../Logo/Logo'
 import Button from '../Button/Button'
 
+import { GameContext } from '../../context/gameContext'
+
 const Home = () => {
 
-    const handleNewGame = () => {
-
-    }
+    const { setHasStarted } = useContext(GameContext)
 
     return (
         <div className={styles.home}>
             <Logo />
             <Button
                 animate="true"
-                onClick={handleNewGame}
+                onClick={() => setHasStarted(true)}
                 style={{
                     marginTop: '2rem'
                 }}
