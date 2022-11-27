@@ -1,25 +1,53 @@
-import React from 'react'
+import React, { useState, useContext, useRef, useEffect } from 'react'
 import styles from './Actions.module.css'
 
 import battleArrow from '../../assets/arrow.svg'
 import Button from '../Button/Button'
 
+import { GameContext } from '../../context/gameContext'
 
+const Actions = (props) => {
 
-const Actions = () => {
+    const pointingArrowRef = useRef(null)
 
+    const { attackDuration } = useContext(GameContext)
+    const [isAttackDisabled, setIsAttackDisabled] = useState(false)
 
+    const handleAttack = () => {
+        setIsAttackDisabled(true)
+        props.setCurrentAttackingPokemon(prevState => {
+            return prevState === 'left' ? 'right' : 'left'
+        })
+
+        setTimeout(() => {
+            setIsAttackDisabled(false)
+        }, attackDuration)
+    }
+
+    const arrowTransform =
+        props.currentAttackingPokemon === 'left' ?
+            { transform: 'scaleX(-1)' } :
+            { transform: 'scaleX(1)' }
+
+    useEffect(() => {
+        if (pointingArrowRef.current) {
+            pointingArrowRef.current.style.transitionDelay = `${attackDuration}ms`
+        }
+    }, [attackDuration])
 
     return (
         <div className={styles.actions}>
             <img
                 src={battleArrow}
-                alt="current attacking pokemon illustration arrow"
+                ref={pointingArrowRef}
+                style={arrowTransform}
+                alt="current attacking pokemon illustration"
                 aria-hidden
             />
             <Button
-                style={{ marginTop: '2rem' }}
                 animate="true"
+                disabled={isAttackDisabled}
+                onClick={handleAttack}
             >
                 Attack!
             </Button>

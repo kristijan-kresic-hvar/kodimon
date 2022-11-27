@@ -1,13 +1,13 @@
 const usePokemonApi = () => {
 
-    const getPokemonData = async (name) => {
+    const getPokemonData = async (name, signal = null) => {
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}${name}`)
+            const res = await fetch(`${import.meta.env.VITE_API_URL}${name}`, { signal })
             const json = await res.json()
             return json
         }
         catch (error) {
-            console.error(error)
+            console.log(error.message)
         }
     }
 

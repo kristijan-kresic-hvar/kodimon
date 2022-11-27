@@ -15,6 +15,8 @@ import usePokemonNames from '../../hooks/usePokemonNames'
 const Arena = () => {
 
     const [pokemons, setPokemons] = useState({})
+    const [currentAttackingPokemon, setCurrentAttackingPokemon] = useState()
+    const [winnerPokemon, setWinnerPokemon] = useState()
     const [loading, setLoading] = useState(false)
 
     const pokemonNames = usePokemonNames()
@@ -24,21 +26,38 @@ const Arena = () => {
     useEffect(() => {
         if (Object.keys(pokemons)?.length) return
 
+        const controller = new AbortController()
+        const signal = controller.signal
+
         setLoading(true)
         Promise.all([
-            getPokemonData(pokemonNames.getRandomPokemon()),
-            getPokemonData(pokemonNames.getRandomPokemon())
+            getPokemonData(pokemonNames.getRandomPokemon(), signal),
+            getPokemonData(pokemonNames.getRandomPokemon(), signal)
         ])
             .then(([pokemonLeftData, pokemonRightData]) => {
                 setPokemons({
-                    left: pokemonLeftData,
-                    right: pokemonRightData
+                    left: {
+                        ...pokemonLeftData,
+                        health: 100
+                    },
+                    right: {
+                        ...pokemonRightData,
+                        health: 100
+                    }
                 })
+
+                const leftPokemonSpeed = pokemonLeftData?.stats?.find(item => item.stat.name === "speed")?.base_stat
+                const rightPokemonSpeed = pokemonRightData?.stats?.find(item => item.stat.name === "speed")?.base_stat
+
+                if (leftPokemonSpeed > rightPokemonSpeed) return setCurrentAttackingPokemon('left')
+
+                setCurrentAttackingPokemon('right')
             })
             .finally(() => setLoading(false))
+
+        return () => controller.abort()
     }, [])
 
-    console.log("Arena rendered")
     if (loading) return "loading..."
     return (
         <div className={styles.arena}>
@@ -49,7 +68,10 @@ const Arena = () => {
                 <div className={styles.arena__header}>
                     <Pokemon {...pokemons?.left} />
                     <div className={styles.arena__header__actions}>
-                        <Actions />
+                        <Actions
+                            currentAttackingPokemon={currentAttackingPokemon}
+                            setCurrentAttackingPokemon={setCurrentAttackingPokemon}
+                        />
                     </div>
                     <Pokemon {...pokemons?.right} />
                 </div>

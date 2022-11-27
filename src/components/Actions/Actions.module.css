@@ -4,3 +4,8 @@
     align-items: center;
     justify-content: center;
 }
+
+.actions>img {
+    transition: transform 300ms linear;
+    margin-bottom: 2rem;
+}
