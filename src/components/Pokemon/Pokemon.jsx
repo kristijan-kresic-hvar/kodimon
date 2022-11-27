@@ -1,9 +1,11 @@
-import React, { memo } from 'react'
+import React, { memo, useRef, useEffect } from 'react'
 import styles from './Pokemon.module.css'
 
 import Wrapper from '../Wrapper/Wrapper'
 
 const Pokemon = (props) => {
+
+    const pokemonHealthBarRef = useRef(null)
 
     const availableStats = ["hp", "attack", "defense", "speed"]
     const pokemonSpriteUrl = props?.sprites?.other["official-artwork"]?.front_default
@@ -14,11 +16,28 @@ const Pokemon = (props) => {
         return []
     })
 
-    console.log("Pokemon rendered")
+    const getHealthBarColor = (value, dark = false) => {
+        if (value >= 50) {
+            return getComputedStyle(document.documentElement).getPropertyValue(dark ? '--green' : '--green-light')
+        } else if (value >= 30 && value < 50) {
+            return getComputedStyle(document.documentElement).getPropertyValue(dark ? '--yellow' : '--yellow-light')
+        } else if (value >= 0 && value < 30) {
+            return getComputedStyle(document.documentElement).getPropertyValue(dark ? '--red' : '--red-light')
+        }
+    }
+
+    useEffect(() => {
+        if (pokemonHealthBarRef.current) {
+            pokemonHealthBarRef.current.style.borderColor = getHealthBarColor(props.health, true)
+            pokemonHealthBarRef.current.querySelector('div').style.width = `${props.health}%`
+            pokemonHealthBarRef.current.querySelector('div').style.background = getHealthBarColor(props.health)
+        }
+    }, [props.health])
+
     return (
         <div className={styles.pokemon}>
-            <div className={styles.pokemon__health}>
-                <p>100%</p>
+            <p style={{ color: `${getHealthBarColor(props.health, true)}` }}>{props.health} %</p>
+            <div ref={pokemonHealthBarRef} className={styles.pokemon__health}>
                 <div className={styles.pokemon__health__inner}></div>
             </div>
             <div className={styles.pokemon__info}>

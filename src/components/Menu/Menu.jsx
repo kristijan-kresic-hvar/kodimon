@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './Menu.module.css'
+// import styles from './Menu.module.css'
 
 import Wrapper from '../Wrapper/Wrapper'
 import Button from '../Button/Button'
@@ -12,20 +12,17 @@ const Menu = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 padding: '1rem',
+                gap: '1rem'
             }}>
-            <Button
-                style={{ marginBottom: '1rem' }}
-            >
+            <Button>
                 Home
             </Button>
-            <Button
-                style={{ marginBottom: '1rem' }}
-            >
+            <Button>
                 New game
             </Button>
-            <Button>
+            {/* <Button>
                 New opponent
-            </Button>
+            </Button> */}
         </Wrapper>
     )
 }
