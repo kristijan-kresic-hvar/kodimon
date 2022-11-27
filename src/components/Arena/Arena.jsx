@@ -14,8 +14,7 @@ import usePokemonNames from '../../hooks/usePokemonNames'
 
 const Arena = () => {
 
-    const [leftPokemon, setLeftPokemon] = useState()
-    const [rightPokemon, setRightPokemon] = useState()
+    const [pokemons, setPokemons] = useState({})
     const [loading, setLoading] = useState(false)
 
     const pokemonNames = usePokemonNames()
@@ -23,18 +22,24 @@ const Arena = () => {
 
     // get the pokemons
     useEffect(() => {
-        if (leftPokemon && rightPokemon) return
+        if (Object.keys(pokemons)?.length) return
 
         setLoading(true)
         Promise.all([
+            getPokemonData(pokemonNames.getRandomPokemon()),
             getPokemonData(pokemonNames.getRandomPokemon())
-                .then(data => setLeftPokemon(data)),
-            getPokemonData(pokemonNames.getRandomPokemon())
-                .then(data => setRightPokemon(data)),
-        ]).finally(() => setLoading(false))
+        ])
+            .then(([pokemonLeftData, pokemonRightData]) => {
+                setPokemons({
+                    left: pokemonLeftData,
+                    right: pokemonRightData
+                })
+            })
+            .finally(() => setLoading(false))
     }, [])
 
-    if (loading || !leftPokemon || !rightPokemon) return "loading..."
+    console.log("Arena rendered")
+    if (loading) return "loading..."
     return (
         <div className={styles.arena}>
             <div className={styles.arena__logo}>
@@ -42,11 +47,11 @@ const Arena = () => {
             </div>
             <div className={styles.arena__inner}>
                 <div className={styles.arena__header}>
-                    <Pokemon {...leftPokemon} />
+                    <Pokemon {...pokemons?.left} />
                     <div className={styles.arena__header__actions}>
                         <Actions />
                     </div>
-                    <Pokemon {...rightPokemon} />
+                    <Pokemon {...pokemons?.right} />
                 </div>
                 <div className={styles.arena__footer}>
                     <div>

@@ -14,8 +14,7 @@ const Pokemon = (props) => {
         return []
     })
 
-    console.log(statsToShow, "STATS TO SHOW")
-
+    console.log("Pokemon rendered")
     return (
         <div className={styles.pokemon}>
             <div className={styles.pokemon__health}>

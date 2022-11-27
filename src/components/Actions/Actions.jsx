@@ -4,7 +4,12 @@ import styles from './Actions.module.css'
 import battleArrow from '../../assets/arrow.svg'
 import Button from '../Button/Button'
 
+
+
 const Actions = () => {
+
+
+
     return (
         <div className={styles.actions}>
             <img
