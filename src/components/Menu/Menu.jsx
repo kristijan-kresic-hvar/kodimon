@@ -1,10 +1,23 @@
-import React from 'react'
+import React, { useContext } from 'react'
 // import styles from './Menu.module.css'
 
 import Wrapper from '../Wrapper/Wrapper'
 import Button from '../Button/Button'
 
-const Menu = () => {
+import { GameContext } from '../../context/gameContext'
+
+const Menu = (props) => {
+
+    const { setHasStarted } = useContext(GameContext)
+
+    const handleGoHome = () => {
+        setHasStarted(false)
+    }
+
+    const handleNewGame = () => {
+        props.restart()
+    }
+
     return (
         <Wrapper
             title="Menu"
@@ -14,10 +27,10 @@ const Menu = () => {
                 padding: '1rem',
                 gap: '1rem'
             }}>
-            <Button>
+            <Button onClick={handleGoHome}>
                 Home
             </Button>
-            <Button>
+            <Button onClick={handleNewGame}>
                 New game
             </Button>
             {/* <Button>
