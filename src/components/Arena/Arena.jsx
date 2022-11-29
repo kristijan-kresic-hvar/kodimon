@@ -43,14 +43,21 @@ const Arena = () => {
         }
     }
 
+    const handleRestart = () => {
+        setPokemons({})
+        getPokemons()
+        setWinnerPokemon(undefined)
+        setHasFinished(false)
+        clearLogs()
+    }
+
     const initiateAttack = () => {
         animatePokemons()
         const chance = Math.floor(Math.random() * 11)
 
         if (currentAttackingPokemon === 'left') {
-            let damage
+            let damage = chance >= 8 ? 0 : ((pokemons.left.stats.attack / 2) - ((pokemons.left.stats.attack / 2) * (pokemons.right.stats.defense / 100))).toFixed(2)
             setPokemons(prevState => {
-                damage = chance >= 8 ? 0 : ((pokemons.left.stats.attack / 2) - ((pokemons.left.stats.attack / 2) * (prevState.right.stats.defense / 100))).toFixed(2)
                 return {
                     ...prevState,
                     right: {
@@ -60,13 +67,12 @@ const Arena = () => {
                     }
                 }
             })
-            damage > 0 ?
+            damage && damage > 0 ?
                 addAttackLog(pokemons.left.name, pokemons.right.name, damage) :
                 addAttackMissedLog(pokemons.left.name, pokemons.right.name)
         } else {
-            let damage
+            let damage = chance >= 8 ? 0 : ((pokemons.right.stats.attack / 2) - ((pokemons.right.stats.attack / 2) * (pokemons.left.stats.defense / 100))).toFixed(2)
             setPokemons(prevState => {
-                damage = chance >= 8 ? 0 : ((pokemons.right.stats.attack / 2) - ((pokemons.right.stats.attack / 2) * (prevState.left.stats.defense / 100))).toFixed(2)
                 return {
                     ...prevState,
                     left: {
@@ -76,10 +82,54 @@ const Arena = () => {
                     }
                 }
             })
-            damage > 0 ?
+            damage && damage > 0 ?
                 addAttackLog(pokemons.right.name, pokemons.left.name, damage) :
                 addAttackMissedLog(pokemons.right.name, pokemons.left.name)
         }
+    }
+
+    const getPokemons = (signal = null) => {
+        setLoading(true)
+        Promise.all([
+            getPokemonData(pokemonNames.getRandomPokemon(), signal),
+            getPokemonData(pokemonNames.getRandomPokemon(), signal)
+        ])
+            .then(([pokemonLeftData, pokemonRightData]) => {
+
+                if (!pokemonLeftData || !pokemonRightData) {
+                    return getPokemons()
+                }
+                const leftPokemonStats = {}
+                const rightPokemonStats = {}
+
+                pokemonLeftData?.stats?.forEach(item => {
+                    leftPokemonStats[item.stat.name] = item.base_stat
+                })
+                pokemonRightData?.stats?.forEach(item => {
+                    rightPokemonStats[item.stat.name] = item.base_stat
+                })
+
+                setPokemons({
+                    left: {
+                        ...pokemonLeftData,
+                        health: leftPokemonStats.hp,
+                        stats: leftPokemonStats
+                    },
+                    right: {
+                        ...pokemonRightData,
+                        health: rightPokemonStats.hp,
+                        stats: rightPokemonStats
+                    }
+                })
+
+                const leftPokemonSpeed = pokemonLeftData?.stats?.find(item => item.stat.name === "speed")?.base_stat
+                const rightPokemonSpeed = pokemonRightData?.stats?.find(item => item.stat.name === "speed")?.base_stat
+
+                if (leftPokemonSpeed > rightPokemonSpeed) return setCurrentAttackingPokemon('left')
+
+                setCurrentAttackingPokemon('right')
+            })
+            .finally(() => setLoading(false))
     }
 
     // check for winner
@@ -116,44 +166,7 @@ const Arena = () => {
 
         const controller = new AbortController()
         const signal = controller.signal
-
-        setLoading(true)
-        Promise.all([
-            getPokemonData(pokemonNames.getRandomPokemon(), signal),
-            getPokemonData(pokemonNames.getRandomPokemon(), signal)
-        ])
-            .then(([pokemonLeftData, pokemonRightData]) => {
-                const leftPokemonStats = {}
-                const rightPokemonStats = {}
-
-                pokemonLeftData?.stats?.forEach(item => {
-                    leftPokemonStats[item.stat.name] = item.base_stat
-                })
-                pokemonRightData?.stats?.forEach(item => {
-                    rightPokemonStats[item.stat.name] = item.base_stat
-                })
-
-                setPokemons({
-                    left: {
-                        ...pokemonLeftData,
-                        health: leftPokemonStats.hp,
-                        stats: leftPokemonStats
-                    },
-                    right: {
-                        ...pokemonRightData,
-                        health: rightPokemonStats.hp,
-                        stats: rightPokemonStats
-                    }
-                })
-
-                const leftPokemonSpeed = pokemonLeftData?.stats?.find(item => item.stat.name === "speed")?.base_stat
-                const rightPokemonSpeed = pokemonRightData?.stats?.find(item => item.stat.name === "speed")?.base_stat
-
-                if (leftPokemonSpeed > rightPokemonSpeed) return setCurrentAttackingPokemon('left')
-
-                setCurrentAttackingPokemon('right')
-            })
-            .finally(() => setLoading(false))
+        getPokemons(signal)
 
         return () => controller.abort()
     }, [])
@@ -203,7 +216,7 @@ const Arena = () => {
                 </div>
                 <div className={styles.arena__footer}>
                     <div>
-                        <Menu />
+                        <Menu restart={handleRestart} />
                     </div>
 
                     <div
