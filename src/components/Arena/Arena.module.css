@@ -2,6 +2,27 @@
     width: 100%;
 }
 
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 100;
+    transition: all 1500ms ease-in-out;
+}
+
+.winnerName {
+    position: fixed;
+    top: 5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 101;
+    color: #000000;
+    font-size: 3rem;
+}
+
 .arena__inner {
     max-width: 1440px;
     margin: 15rem auto;
@@ -50,6 +71,10 @@
 }
 
 @media only screen and (max-width: 768px) {
+    .arena__header {
+        padding: 0 2rem;
+    }
+
     .arena__logo {
         left: 50%;
         transform: translateX(-50%);

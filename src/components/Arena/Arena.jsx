@@ -14,6 +14,7 @@ import { LogsContext } from '../../context/logsContext'
 // hooks
 import usePokemonApi from '../../hooks/usePokemonApi'
 import usePokemonNames from '../../hooks/usePokemonNames'
+import useHelpers from '../../hooks/useHelpers'
 
 const Arena = () => {
 
@@ -30,6 +31,7 @@ const Arena = () => {
 
     const pokemonNames = usePokemonNames()
     const { getPokemonData } = usePokemonApi()
+    const { capitalizeFirstLetter } = useHelpers()
 
     const animatePokemons = () => {
         if (leftPokemonRef.current && rightPokemonRef.current) {
@@ -44,7 +46,6 @@ const Arena = () => {
     }
 
     const handleRestart = () => {
-        setPokemons({})
         getPokemons()
         setWinnerPokemon(undefined)
         setHasFinished(false)
@@ -192,41 +193,51 @@ const Arena = () => {
 
     if (loading) return "loading..."
     return (
-        <div className={styles.arena}>
-            <div className={styles.arena__logo}>
-                <Logo small />
-            </div>
-            <div className={styles.arena__inner}>
-                <div className={styles.arena__header}>
-                    <Pokemon
-                        ref={leftPokemonRef}
-                        {...pokemons?.left}
-                    />
-                    <div className={styles.arena__header__actions}>
-                        <Actions
-                            currentAttackingPokemon={currentAttackingPokemon}
-                            setCurrentAttackingPokemon={setCurrentAttackingPokemon}
-                            initiateAttack={initiateAttack}
+        <>
+            {hasFinished && winnerPokemon &&
+                <div className={styles.winnerName}>
+                    {capitalizeFirstLetter(winnerPokemon.name)} won!
+                </div>
+            }
+            {hasFinished && <div className={styles.overlay}></div>}
+            <div
+                className={styles.arena}
+            >
+                <div className={styles.arena__logo}>
+                    <Logo small />
+                </div>
+                <div className={styles.arena__inner}>
+                    <div className={styles.arena__header}>
+                        <Pokemon
+                            ref={leftPokemonRef}
+                            {...pokemons?.left}
+                        />
+                        <div className={styles.arena__header__actions}>
+                            <Actions
+                                currentAttackingPokemon={currentAttackingPokemon}
+                                setCurrentAttackingPokemon={setCurrentAttackingPokemon}
+                                initiateAttack={initiateAttack}
+                            />
+                        </div>
+                        <Pokemon
+                            ref={rightPokemonRef}
+                            {...pokemons?.right}
                         />
                     </div>
-                    <Pokemon
-                        ref={rightPokemonRef}
-                        {...pokemons?.right}
-                    />
-                </div>
-                <div className={styles.arena__footer}>
-                    <div>
-                        <Menu restart={handleRestart} />
-                    </div>
+                    <div className={styles.arena__footer}>
+                        <div>
+                            <Menu restart={handleRestart} />
+                        </div>
 
-                    <div
-                        style={{ flex: 2, width: '50%', maxWidth: '700px', minWidth: '300px' }}
-                    >
-                        <LogsComponent />
+                        <div
+                            style={{ flex: 2, width: '50%', maxWidth: '700px', minWidth: '300px', margin: hasFinished ? '0 auto' : '0' }}
+                        >
+                            <LogsComponent />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 
