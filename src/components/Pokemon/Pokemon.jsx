@@ -19,18 +19,41 @@ const Pokemon = forwardRef((props, ref) => {
         }
     }
 
+    const renderCombatStatus = () => {
+        if (props.damage_taken > 0) {
+            return (
+                <div
+                    className={styles.pokemon__combat__status}
+                >
+                    {props.damage_taken}dmg!
+                </div>
+            )
+        } else if (props.damage_taken === 0) {
+            return (
+                <div
+                    className={styles.pokemon__combat__status}
+                    style={{
+                        color: '#000000'
+                    }}
+                >
+                    Missed!
+                </div>
+            )
+        }
+    }
+
     useEffect(() => {
         if (pokemonHealthBarRef.current) {
-            pokemonHealthBarRef.current.style.borderColor = getHealthBarColor(props.health > 0 ? Math.floor((props.health / props.stats?.hp) * 100) : 0, true)
-            pokemonHealthBarRef.current.querySelector('div').style.width = `${props.health > 0 ? Math.floor((props.health / props.stats?.hp) * 100) : 0}%`
-            pokemonHealthBarRef.current.querySelector('div').style.background = getHealthBarColor(props.health > 0 ? Math.floor((props.health / props.stats?.hp) * 100) : 0)
+            const currentHealth = props.health > 0 ? Math.floor((props.health / props.stats?.hp) * 100) : 0
+            pokemonHealthBarRef.current.style.borderColor = getHealthBarColor(currentHealth, true)
+            pokemonHealthBarRef.current.querySelector('div').style.width = `${currentHealth}%`
+            pokemonHealthBarRef.current.querySelector('div').style.background = getHealthBarColor(currentHealth)
         }
     }, [props.health])
 
-    console.log(Math.floor((props.health / props.stats?.hp) * 100))
-
     return (
         <div className={styles.pokemon}>
+            {renderCombatStatus()}
             <p style={{ color: `${getHealthBarColor(props.health > 0 ? Math.floor((props.health / props.stats?.hp) * 100) : 0, true)}` }}>{props.health > 0 ? Math.floor((props.health / props.stats?.hp) * 100) : 0} %</p>
             <div ref={pokemonHealthBarRef} className={styles.pokemon__health}>
                 <div className={styles.pokemon__health__inner}></div>
@@ -60,7 +83,7 @@ const Pokemon = forwardRef((props, ref) => {
                     </p>
                 </Wrapper>
             </div>
-        </div>
+        </div >
     )
 })
 

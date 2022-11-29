@@ -22,6 +22,9 @@
     margin-bottom: 3rem;
     overflow-x: auto;
     gap: 1rem;
+    position: relative;
+    z-index: 1;
+    padding: 3rem 0;
 }
 
 .arena__header__actions {

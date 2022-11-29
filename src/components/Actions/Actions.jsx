@@ -10,7 +10,7 @@ const Actions = (props) => {
 
     const pointingArrowRef = useRef(null)
 
-    const { attackDuration } = useContext(GameContext)
+    const { attackDuration, hasFinished } = useContext(GameContext)
     const [isAttackDisabled, setIsAttackDisabled] = useState(false)
     const [delay] = useState(300)
 
@@ -49,7 +49,7 @@ const Actions = (props) => {
             />
             <Button
                 animate="true"
-                disabled={isAttackDisabled}
+                disabled={isAttackDisabled || hasFinished}
                 onClick={handleAttack}
             >
                 Attack!
