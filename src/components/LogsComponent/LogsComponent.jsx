@@ -1,21 +1,29 @@
-import React from 'react'
-import styles from './LogsComponent.module.css'
+import React, { useContext } from 'react'
+// import styles from './LogsComponent.module.css'
 
 import Wrapper from '../Wrapper/Wrapper'
 
+import { LogsContext } from '../../context/logsContext'
+
 const LogsComponent = () => {
+
+    const { logs } = useContext(LogsContext)
+
     return (
         <Wrapper
             title="Logs"
             style={{
                 minHeight: '300px',
                 padding: '1rem .5rem',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                overflowY: 'auto',
+                maxHeight: '300px'
             }}
         >
-            <p>Eevee attacked Squirtle for 35.75 dmg</p>
-            <p>Squirtle attacked Eevee for 24 dmg</p>
-            <p>Eevee missed Squirtle</p>
+            {logs.map(log => (
+                <p>{log}</p>
+            ))}
+            {!logs.length && <p>Its so silent here...</p>}
         </Wrapper>
     )
 }

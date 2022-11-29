@@ -9,6 +9,7 @@ import Menu from '../Menu/Menu'
 import LogsComponent from '../LogsComponent/LogsComponent'
 
 import { GameContext } from '../../context/gameContext'
+import { LogsContext } from '../../context/logsContext'
 
 // hooks
 import usePokemonApi from '../../hooks/usePokemonApi'
@@ -17,6 +18,7 @@ import usePokemonNames from '../../hooks/usePokemonNames'
 const Arena = () => {
 
     const { attackDuration, hasFinished, setHasFinished } = useContext(GameContext)
+    const { addAttackLog, addDeathLog, addAttackMissedLog, clearLogs } = useContext(LogsContext)
 
     const leftPokemonRef = useRef(null)
     const rightPokemonRef = useRef(null)
@@ -46,8 +48,9 @@ const Arena = () => {
         const chance = Math.floor(Math.random() * 11)
 
         if (currentAttackingPokemon === 'left') {
+            let damage
             setPokemons(prevState => {
-                const damage = chance >= 8 ? 0 : ((pokemons.left.stats.attack / 2) - ((pokemons.left.stats.attack / 2) * (prevState.right.stats.defense / 100))).toFixed(2)
+                damage = chance >= 8 ? 0 : ((pokemons.left.stats.attack / 2) - ((pokemons.left.stats.attack / 2) * (prevState.right.stats.defense / 100))).toFixed(2)
                 return {
                     ...prevState,
                     right: {
@@ -57,9 +60,13 @@ const Arena = () => {
                     }
                 }
             })
+            damage > 0 ?
+                addAttackLog(pokemons.left.name, pokemons.right.name, damage) :
+                addAttackMissedLog(pokemons.left.name, pokemons.right.name)
         } else {
+            let damage
             setPokemons(prevState => {
-                const damage = chance >= 8 ? 0 : ((pokemons.right.stats.attack / 2) - ((pokemons.right.stats.attack / 2) * (prevState.left.stats.defense / 100))).toFixed(2)
+                damage = chance >= 8 ? 0 : ((pokemons.right.stats.attack / 2) - ((pokemons.right.stats.attack / 2) * (prevState.left.stats.defense / 100))).toFixed(2)
                 return {
                     ...prevState,
                     left: {
@@ -69,6 +76,9 @@ const Arena = () => {
                     }
                 }
             })
+            damage > 0 ?
+                addAttackLog(pokemons.right.name, pokemons.left.name, damage) :
+                addAttackMissedLog(pokemons.right.name, pokemons.left.name)
         }
     }
 
@@ -83,6 +93,7 @@ const Arena = () => {
             if (rightPokemonRef.current) {
                 rightPokemonRef.current.style.animation = "deathAnimation 500ms ease-out forwards";
             }
+            addDeathLog(pokemons.right.name)
             setHasFinished(true)
         } else if (pokemons?.left?.health <= 0) {
             setWinnerPokemon({
@@ -93,6 +104,7 @@ const Arena = () => {
             if (leftPokemonRef.current) {
                 leftPokemonRef.current.style.animation = "deathAnimation 500ms ease-out forwards";
             }
+            addDeathLog(pokemons.left.name)
             setHasFinished(true)
         }
 
