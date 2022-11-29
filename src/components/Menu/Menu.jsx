@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 // import styles from './Menu.module.css'
 
 import Wrapper from '../Wrapper/Wrapper'
@@ -6,12 +6,34 @@ import Button from '../Button/Button'
 
 import { GameContext } from '../../context/gameContext'
 
+const winMenuStyles = {
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '1rem',
+    gap: '1rem',
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: 101,
+    transition: 'all 1500ms ease-in-out',
+}
+
+const menuStyles = {
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '1rem',
+    gap: '1rem',
+    transition: 'all 1500ms ease-in-out',
+}
+
 const Menu = (props) => {
 
-    const { setHasStarted } = useContext(GameContext)
+    const { setHasStarted, hasFinished, setHasFinished } = useContext(GameContext)
 
     const handleGoHome = () => {
         setHasStarted(false)
+        setHasFinished(false)
     }
 
     const handleNewGame = () => {
@@ -21,12 +43,7 @@ const Menu = (props) => {
     return (
         <Wrapper
             title="Menu"
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-                padding: '1rem',
-                gap: '1rem'
-            }}>
+            style={hasFinished ? winMenuStyles : menuStyles}>
             <Button onClick={handleGoHome}>
                 Home
             </Button>

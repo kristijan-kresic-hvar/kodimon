@@ -1,5 +1,12 @@
+.wrapper {
+    position: relative;
+}
+
 .wrapper h3 {
     padding: 0 0 .5rem .5rem;
+    top: -2rem;
+    left: 0;
+    position: absolute;
 }
 
 .wrapper__inner {
