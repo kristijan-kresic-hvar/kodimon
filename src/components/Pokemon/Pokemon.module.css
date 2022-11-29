@@ -2,6 +2,7 @@
     min-width: 350px;
     height: auto;
     min-height: 300px;
+    position: relative;
 }
 
 .pokemon__health {
@@ -41,4 +42,26 @@
     max-width: 180px;
     display: block;
     margin: 0 auto;
+}
+
+.pokemon__combat__status {
+    position: absolute;
+    left: 2rem;
+    transform: translateX(-50%);
+    color: var(--red);
+    font-size: 1.3rem;
+    font-weight: bold;
+    top: -2rem;
+    transform: rotate(-25deg);
+    animation: fadeOut 1000ms ease-out forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }

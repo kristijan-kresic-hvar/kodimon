@@ -42,32 +42,30 @@ const Arena = () => {
     }
 
     const initiateAttack = () => {
-        // attack code...
         animatePokemons()
         const chance = Math.floor(Math.random() * 11)
-        if (chance >= 8) {
-            return
-        }
 
         if (currentAttackingPokemon === 'left') {
             setPokemons(prevState => {
-                const damage = ((pokemons.left.stats.attack / 2) - ((pokemons.left.stats.attack / 2) * (prevState.right.stats.defense / 100)))
+                const damage = chance >= 8 ? 0 : ((pokemons.left.stats.attack / 2) - ((pokemons.left.stats.attack / 2) * (prevState.right.stats.defense / 100))).toFixed(2)
                 return {
                     ...prevState,
                     right: {
                         ...prevState.right,
-                        health: damage >= 0 ? prevState.right.health - damage : prevState.right.health
+                        health: damage >= 0 ? prevState.right.health - damage : prevState.right.health,
+                        damage_taken: damage >= 0 ? damage : 0
                     }
                 }
             })
         } else {
             setPokemons(prevState => {
-                const damage = ((pokemons.right.stats.attack / 2) - ((pokemons.right.stats.attack / 2) * (prevState.left.stats.defense / 100)))
+                const damage = chance >= 8 ? 0 : ((pokemons.right.stats.attack / 2) - ((pokemons.right.stats.attack / 2) * (prevState.left.stats.defense / 100))).toFixed(2)
                 return {
                     ...prevState,
                     left: {
                         ...prevState.left,
-                        health: damage >= 0 ? prevState.left.health - damage : prevState.left.health
+                        health: damage >= 0 ? prevState.left.health - damage : prevState.left.health,
+                        damage_taken: damage >= 0 ? damage : 0
                     }
                 }
             })
@@ -147,6 +145,25 @@ const Arena = () => {
 
         return () => controller.abort()
     }, [])
+
+    // do after attack is finished
+    useEffect(() => {
+        // allow fadeOut animation to complete
+        setTimeout(() => {
+            setPokemons(prevState => {
+                return {
+                    left: {
+                        ...prevState.left,
+                        damage_taken: undefined
+                    },
+                    right: {
+                        ...prevState.right,
+                        damage_taken: undefined
+                    }
+                }
+            })
+        }, attackDuration)
+    }, [currentAttackingPokemon])
 
     if (loading) return "loading..."
     return (
