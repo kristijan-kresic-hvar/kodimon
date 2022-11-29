@@ -12,8 +12,11 @@ const Actions = (props) => {
 
     const { attackDuration } = useContext(GameContext)
     const [isAttackDisabled, setIsAttackDisabled] = useState(false)
+    const [delay] = useState(300)
 
     const handleAttack = () => {
+        props.initiateAttack()
+
         setIsAttackDisabled(true)
         props.setCurrentAttackingPokemon(prevState => {
             return prevState === 'left' ? 'right' : 'left'
@@ -21,7 +24,7 @@ const Actions = (props) => {
 
         setTimeout(() => {
             setIsAttackDisabled(false)
-        }, attackDuration)
+        }, attackDuration + delay)
     }
 
     const arrowTransform =

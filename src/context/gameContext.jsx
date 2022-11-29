@@ -7,7 +7,6 @@ const GameContextProvider = (props) => {
     const [hasStarted, setHasStarted] = useState(false)
     const [hasFinished, setHasFinished] = useState(false)
     const [attackDuration] = useState(1000) // 1 second
-    const [missChance] = useState(20) // 20%
 
     return (
         <GameContext.Provider value={{
@@ -16,7 +15,6 @@ const GameContextProvider = (props) => {
             hasFinished,
             setHasFinished,
             attackDuration,
-            missChance
         }}>
             {props.children}
         </GameContext.Provider>

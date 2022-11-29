@@ -59,3 +59,59 @@
     transform: translate3d(4px, 0, 0);
   }
 }
+
+@keyframes attackFromLeft {
+  0% {
+    transform: translate(0vw, 20%);
+  }
+
+  25% {
+    transform: translate(15vw, -20%);
+  }
+
+  50% {
+    transform: translate(70vw, 0%);
+  }
+
+  75% {
+    transform: translate(15vw, -20%);
+  }
+
+  100% {
+    transform: translateX(0vw, 0%);
+  }
+}
+
+@keyframes attackFromRight {
+  0% {
+    transform: translate(0vw, 20%);
+  }
+
+  25% {
+    transform: translate(-15vw, -20%);
+  }
+
+  50% {
+    transform: translate(-70vw, 0%);
+  }
+
+  75% {
+    transform: translate(-15vw, -20%);
+  }
+
+  100% {
+    transform: translateX(0vw, 0%);
+  }
+}
+
+@keyframes deathAnimation {
+  from {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}

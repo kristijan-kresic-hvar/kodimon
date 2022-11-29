@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import styles from './Arena.module.css'
 
 // components
@@ -8,11 +8,18 @@ import Logo from '../Logo/Logo'
 import Menu from '../Menu/Menu'
 import LogsComponent from '../LogsComponent/LogsComponent'
 
+import { GameContext } from '../../context/gameContext'
+
 // hooks
 import usePokemonApi from '../../hooks/usePokemonApi'
 import usePokemonNames from '../../hooks/usePokemonNames'
 
 const Arena = () => {
+
+    const { attackDuration, hasFinished, setHasFinished } = useContext(GameContext)
+
+    const leftPokemonRef = useRef(null)
+    const rightPokemonRef = useRef(null)
 
     const [pokemons, setPokemons] = useState({})
     const [currentAttackingPokemon, setCurrentAttackingPokemon] = useState()
@@ -21,6 +28,77 @@ const Arena = () => {
 
     const pokemonNames = usePokemonNames()
     const { getPokemonData } = usePokemonApi()
+
+    const animatePokemons = () => {
+        if (leftPokemonRef.current && rightPokemonRef.current) {
+            if (currentAttackingPokemon === 'left') {
+                leftPokemonRef.current.style.animation = `attackFromLeft ${attackDuration}ms ease-in forwards`
+                rightPokemonRef.current.style.animation = `shake ${attackDuration}ms forwards`
+            } else {
+                rightPokemonRef.current.style.animation = `attackFromRight ${attackDuration}ms ease-in forwards`
+                leftPokemonRef.current.style.animation = `shake ${attackDuration}ms forwards`
+            }
+        }
+    }
+
+    const initiateAttack = () => {
+        // attack code...
+        animatePokemons()
+        const chance = Math.floor(Math.random() * 11)
+        if (chance >= 8) {
+            return
+        }
+
+        if (currentAttackingPokemon === 'left') {
+            setPokemons(prevState => {
+                const damage = ((pokemons.left.stats.attack / 2) - ((pokemons.left.stats.attack / 2) * (prevState.right.stats.defense / 100)))
+                return {
+                    ...prevState,
+                    right: {
+                        ...prevState.right,
+                        health: damage >= 0 ? prevState.right.health - damage : prevState.right.health
+                    }
+                }
+            })
+        } else {
+            setPokemons(prevState => {
+                const damage = ((pokemons.right.stats.attack / 2) - ((pokemons.right.stats.attack / 2) * (prevState.left.stats.defense / 100)))
+                return {
+                    ...prevState,
+                    left: {
+                        ...prevState.left,
+                        health: damage >= 0 ? prevState.left.health - damage : prevState.left.health
+                    }
+                }
+            })
+        }
+    }
+
+    // check for winner
+    useEffect(() => {
+        if (pokemons?.right?.health <= 0) {
+            setWinnerPokemon({
+                side: 'left',
+                name: pokemons.left.name
+            })
+            // give losing pokemon death animation
+            if (rightPokemonRef.current) {
+                rightPokemonRef.current.style.animation = "deathAnimation 500ms ease-out forwards";
+            }
+            setHasFinished(true)
+        } else if (pokemons?.left?.health <= 0) {
+            setWinnerPokemon({
+                side: 'right',
+                name: pokemons.right.name
+            })
+            // give losing pokemon death animation
+            if (leftPokemonRef.current) {
+                leftPokemonRef.current.style.animation = "deathAnimation 500ms ease-out forwards";
+            }
+            setHasFinished(true)
+        }
+
+    }, [pokemons?.right?.health, pokemons?.left?.health])
 
     // get the pokemons
     useEffect(() => {
@@ -35,14 +113,26 @@ const Arena = () => {
             getPokemonData(pokemonNames.getRandomPokemon(), signal)
         ])
             .then(([pokemonLeftData, pokemonRightData]) => {
+                const leftPokemonStats = {}
+                const rightPokemonStats = {}
+
+                pokemonLeftData?.stats?.forEach(item => {
+                    leftPokemonStats[item.stat.name] = item.base_stat
+                })
+                pokemonRightData?.stats?.forEach(item => {
+                    rightPokemonStats[item.stat.name] = item.base_stat
+                })
+
                 setPokemons({
                     left: {
                         ...pokemonLeftData,
-                        health: 100
+                        health: leftPokemonStats.hp,
+                        stats: leftPokemonStats
                     },
                     right: {
                         ...pokemonRightData,
-                        health: 100
+                        health: rightPokemonStats.hp,
+                        stats: rightPokemonStats
                     }
                 })
 
@@ -66,14 +156,21 @@ const Arena = () => {
             </div>
             <div className={styles.arena__inner}>
                 <div className={styles.arena__header}>
-                    <Pokemon {...pokemons?.left} />
+                    <Pokemon
+                        ref={leftPokemonRef}
+                        {...pokemons?.left}
+                    />
                     <div className={styles.arena__header__actions}>
                         <Actions
                             currentAttackingPokemon={currentAttackingPokemon}
                             setCurrentAttackingPokemon={setCurrentAttackingPokemon}
+                            initiateAttack={initiateAttack}
                         />
                     </div>
-                    <Pokemon {...pokemons?.right} />
+                    <Pokemon
+                        ref={rightPokemonRef}
+                        {...pokemons?.right}
+                    />
                 </div>
                 <div className={styles.arena__footer}>
                     <div>
